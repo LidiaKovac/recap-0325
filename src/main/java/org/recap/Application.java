@@ -1,35 +1,57 @@
 package org.recap;
 
+import com.github.javafaker.Faker;
 import org.recap.entities.*;
 
+import java.util.*;
+import java.util.stream.Stream;
+
 public class Application {
+    private static Faker faker = new Faker(Locale.ENGLISH);
+    private static Random random = new Random();
+    private static Scanner input = new Scanner(System.in);
+
+    private static List<Veicolo> veicoli = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
 
-//        Veicolo panda = new Veicolo("1", "ABCDEFG", "Panda", "Fiat", 50.00 ); //✨
-//        v.setTariffa(67.80);
-            Auto panda = new Auto("1", "ABCDEFG", "Panda", "Fiat", 50.00, true, false);
-            Auto qashqai = new Auto("2", "FGHIJKL", "Qashqai", "Nissan", 80.00, false, true);
+            for(int i = 0; i < 100; i++) {
+                Auto auto = new Auto("A" + i, "ABCDEFG", faker.backToTheFuture().character(), faker.funnyName().name(), random.nextDouble(100), random.nextBoolean(), random.nextBoolean());
+                Moto moto = new Moto("M" + i, "FGHIJKL", faker.elderScrolls().firstName(), faker.zelda().character(), random.nextDouble(100), MotoType.cc50, random.nextBoolean());
+                veicoli.add(auto);
+                veicoli.add(moto);
+            }
+            //Auto panda = new Auto("1", "ABCDEFG", "Panda", "Fiat", 50.00, true, false);
+            //Auto qashqai = new Auto("2", "FGHIJKL", "Qashqai", "Nissan", 80.00, false, true);
 
-            Moto vespa = new Moto("3", "MNOPQRS", "Vespa", "Vespa", 14.00, MotoType.cc50, false);
-            Moto ciao = new Moto("4", "TUVWXYZ", "Ciao", "Ciao", 10.00, MotoType.cc50, false);
+            //Moto vespa = new Moto("3", "MNOPQRS", "Vespa", "Vespa", 14.00, MotoType.cc50, false);
+            //Moto ciao = new Moto("4", "TUVWXYZ", "Ciao", "Ciao", 10.00, MotoType.cc50, false);
 
-            User luca = new User("Luca", UserRole.USER);
 //            System.out.println(luca);
 
-            luca.affittaVeicolo(panda);
-            luca.affittaVeicolo(qashqai);
-            luca.affittaVeicolo(vespa);
-            luca.affittaVeicolo(ciao);
-
-            luca.stampaPrenotazioni();
-
-            luca.rimuoviVeicoloAffittato("2");
-
-            luca.stampaPrenotazioni();
 
 
+            //Find by id
+            System.out.println("Inserisci un id: ");
+            String id = input.nextLine();
+            Stream<Veicolo> streamVeicoli = veicoli.stream();
+            Stream<Veicolo> streamFiltrata = streamVeicoli.filter((veicolo) -> veicolo.getId().equals(id));
+            List<Veicolo> listaDiVeicoliFiltrati = streamFiltrata.toList();
+            Veicolo trovato = listaDiVeicoliFiltrati.getFirst();
+
+            // veicoli.stream().filter(veicolo -> veicolo.getId().equals(id)).toList().getFirst();
+            System.out.println(trovato);
+
+            //return id e targa da lista veicoli
+            Stream<Veicolo> stream2Veicoli = veicoli.stream();
+            Stream<Map> mappedList = stream2Veicoli.map(veicolo -> {
+                Map map = new HashMap<>();
+                map.put(veicolo.getId(), veicolo.getTarga());
+                return map;
+            });
+
+            System.out.println(mappedList.toList());
 
         } catch (RuntimeException err) {
             System.out.println(err.getMessage());

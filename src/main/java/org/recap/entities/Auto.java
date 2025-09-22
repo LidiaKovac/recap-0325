@@ -22,7 +22,7 @@ public class Auto extends Veicolo {
 
     @Override
     public String getTarga() {
-        return "TARGA NON DISPONIBILE";
+        return this.targa;
     }
 
     @Override
